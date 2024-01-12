@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.name }}
+data:
+  application-dev.yaml: |
+    server:
+      port: {{ .Values.app.port }}
+    auth0:
+      domain: {{ .Values.auth0.domain }}
+      audience: {{ .Values.auth0.audience }}

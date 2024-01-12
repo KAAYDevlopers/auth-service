@@ -1,0 +1,4 @@
+apiVersion: v2
+name: auth-service-ms
+description: Helm chart for auth-service-ms
+version: 1.0.0-SNAPSHOT
