@@ -1,0 +1,17 @@
+app:
+  replicas: 1
+  name: auth-service-ms
+  configPath: /app/config
+  port: 8089
+
+
+configMap:
+  name: auth-service-config
+
+image:
+  repository: abw12/auth-service-ms # update image name
+  tag: v1
+
+auth0:
+  domain:
+  audience:

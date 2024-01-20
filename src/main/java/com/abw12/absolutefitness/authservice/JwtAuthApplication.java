@@ -1,7 +1,6 @@
 package com.abw12.absolutefitness.authservice;
 
 import com.abw12.absolutefitness.authservice.exceptions.UnauthorizedException;
-import com.auth0.jwk.InvalidPublicKeyException;
 import com.auth0.jwk.JwkException;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.JwkProviderBuilder;
@@ -10,9 +9,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-//import com.auth0.jwt.impl.ClaimsHolder;
-import com.auth0.jwt.interfaces.RSAKeyProvider;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.concurrent.TimeUnit;
 
@@ -38,9 +36,15 @@ public class JwtAuthApplication {
 
 	private JwkProvider jwkProvider;
 
+	private static final Logger logger = LoggerFactory.getLogger(JwtAuthApplication.class);
+
 	@PostConstruct
 	public void init() throws MalformedURLException {
-		this.jwkProvider = new JwkProviderBuilder(new URL("https://" + domain + "/.well-known/jwks.json"))
+		logger.info("Inside init method.");
+		URL url = new URL("https://" + domain + "/.well-known/jwks.json");
+		logger.info("the url is {}", url);
+		logger.debug("the url is {}", url);
+		this.jwkProvider = new JwkProviderBuilder(url)
 				.cached(10, 24, TimeUnit.HOURS)
 				.rateLimited(10, 1, TimeUnit.MINUTES)
 				.build();
@@ -52,6 +56,7 @@ public class JwtAuthApplication {
 
 	@GetMapping("/auth")
 	public String authenticate(@RequestHeader("Authorization") String authorizationHeader) throws RuntimeException {
+		logger.info("Inside validate token");
 		try {
 			String token = authorizationHeader.replace("Bearer ", "");
 			DecodedJWT jwt = JWT.decode(token);
