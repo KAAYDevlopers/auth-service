@@ -13,5 +13,5 @@ image:
   tag: v1
 
 auth0:
-  domain: dev-8wk0ywxqn0gks4hm.us.auth0.com
-  audience: product-catalog-kaay.com
+  domain:
+  audience:
