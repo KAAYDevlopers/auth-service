@@ -12,6 +12,5 @@ image:
   repository: abw12/auth-service-ms # update image name
   tag: v1
 
-auth0:
-  domain:
-  audience:
+app_id: ${APP_ID}
+secret: ${SECRET_KEY}

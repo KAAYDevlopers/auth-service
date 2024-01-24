@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-      app: {{ .Values.app.name }}
+       app: {{ .Values.app.name }}
     spec:
       containers:
         - name: {{ .Values.app.name }}
@@ -19,6 +19,16 @@ spec:
               value: "dev"
             - name: SPRING_CONFIG_LOCATION
               value: "file:{{ .Values.app.configPath }}/"
+            - name: APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: app-id
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: secret-key
           volumeMounts:
             - name: config-volume
               mountPath: {{ .Values.app.configPath }}

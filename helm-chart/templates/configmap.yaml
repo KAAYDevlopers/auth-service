@@ -6,6 +6,5 @@ data:
   application-dev.yaml: |
     server:
       port: {{ .Values.app.port }}
-    auth0:
-      domain: {{ .Values.auth0.domain }}
-      audience: {{ .Values.auth0.audience }}
+    app_id: {{ .Values.app_id }}
+    secret: {{ .Values.secret }}
