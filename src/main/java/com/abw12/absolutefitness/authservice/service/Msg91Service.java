@@ -50,6 +50,24 @@ public class Msg91Service {
         }
     }
 
+    public ResponseEntity<?> verifyOtp(String otp, String mobile) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("authkey", authKey);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        String url = "https://control.msg91.com/api/v5/otp/verify?otp=" + otp + "&mobile=" + mobile;
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url, HttpMethod.GET, entity, String.class);
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error verifying OTP with MSG91 API: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
 
     private boolean isValidIndianMobileNumber(String mobileNumber) {
         String regex = "^[6-9]\\d{9}$";

@@ -79,6 +79,13 @@ public class JwtAuthApplication {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@GetMapping("/otp/verify")
+	public ResponseEntity<?> verifyOtp(@RequestParam String otp,
+									   @RequestParam String mobile) {
+		return new ResponseEntity<>(HttpStatus.OK);
+		// return service.verifyOtp(otp, mobile);
+	}
+
 	@PostMapping("/generateToken")
 	private String authenticate(@RequestBody AuthRequest authRequest) throws MalformedURLException {
 		if (authRequest.getAppID() != null && isValidAppId(authRequest.getAppID())) {
