@@ -3,6 +3,7 @@ package com.abw12.absolutefitness.authservice;
 import com.abw12.absolutefitness.authservice.dto.AuthRequest;
 import com.abw12.absolutefitness.authservice.exceptions.UnauthorizedException;
 import com.abw12.absolutefitness.authservice.service.JwtService;
+import com.abw12.absolutefitness.authservice.service.Msg91Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -13,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -36,6 +42,11 @@ public class JwtAuthApplication {
 	@Value("${secret}")
 	private String SECRET;
 
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Autowired
+	private Msg91Service service;
 
 	@Autowired
 	private JwtService jwtService;
@@ -58,6 +69,21 @@ public class JwtAuthApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(JwtAuthApplication.class, args);
+	}
+
+	@PostMapping("/sendOtp")
+	public ResponseEntity<?> sendOtp(@RequestParam String templateId,
+									 @RequestParam String mobile) {
+		// Assuming authKey is not a variable part of each request and is securely managed within the service
+		//return service.sendOtp(mobile, templateId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("/otp/verify")
+	public ResponseEntity<?> verifyOtp(@RequestParam String otp,
+									   @RequestParam String mobile) {
+		return new ResponseEntity<>(HttpStatus.OK);
+		// return service.verifyOtp(otp, mobile);
 	}
 
 	@PostMapping("/generateToken")
@@ -110,4 +136,11 @@ public class JwtAuthApplication {
 			throw new UnauthorizedException();
  		}
     }
+
+	private boolean isValidIndianMobileNumber(String mobileNumber) {
+		// Regex to check valid Indian mobile number
+		// Assumes the number is passed without the country code. Adjust regex if country code is included.
+		String regex = "^[6-9]\\d{9}$"; // Starts with 6-9 and followed by 9 digits
+		return mobileNumber.matches(regex);
+	}
 }
